@@ -1,0 +1,39 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	mavenLocal()
+	maven {
+		url = 'https://repo.runelite.net'
+	}
+	mavenCentral()
+}
+
+def runeLiteVersion = 'latest.release'
+
+dependencies {
+	compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
+
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+	testImplementation 'junit:junit:4.12'
+	testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
+}
+
+group = 'com.pricepaid'
+version = '1.0.0'
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	sourceCompatibility = '11'
+	targetCompatibility = '11'
+}
+
+// Launches the RuneLite client with this plugin loaded (dev mode).
+tasks.register('runClient', JavaExec) {
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = 'com.pricepaid.PricePaidPluginTest'
+	jvmArgs '-ea'
+}
